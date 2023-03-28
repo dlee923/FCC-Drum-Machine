@@ -1,38 +1,119 @@
+:root {
+  --background-color: #203946;
+  --button-color: #cdf4dc;
+  --toggle-color: #01949a;
+  --button-press-color: #cd0046;
+  --border-color: #cdf4dc;
+}
+
+button {
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0);
+}
+
+
+
+button:hover {
+  border: 1px solid var(--border-color);
+}
+
+button:active {
+  background-color: var(--border-color);
+  color: var(--button-press-color);
+  box-shadow: none;
+  border: none;
+}
+
+* {
+  margin: 0;
+  /* border: 1px solid black; */
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  height: 100%;
   min-height: 100vh;
+  background-color: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.drum-machine-container {
+  width: 50vw;
+  height: 44vh;
+  border: 3px solid var(--border-color);
+  padding: 0 5vh 5vh 5vh;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.drum-machine-container-header {
+  text-align: end;
+  font-style: italic;
+  font-weight: 900;
+  padding-right: 10px;
+  line-height: 5vh;
+  margin: 0 -5vh;
+  height: 5vh;
+  color: var(--border-color);
+}
+
+.drum-machine-container-content {
+  display: flex;
+}
+
+.drum-machine-keypad {
+  /* background-color: blue; */
+  width: 30vw;
+  display: grid;
+  grid-template-columns: 10vw 10vw 10vw;
+  grid-template-rows: 13vh 13vh 13vh;
+  align-items: center;  
+  justify-items: center;  
+}
+
+.drum-machine-keypad-item {  
+  height: 85%;
+  width: 90%;  
+}
+
+.drum-machine-keypad-button {
+  background-color: var(--background-color);
+  font-weight: bold;
+  font-size: 15px;
+  color: var(--button-color);
+  border-radius: 5px;
+  box-shadow: 3px 3px 5px black;
+}
+
+.drum-machine-togglepad {
+  width: 20vw;
+  background-color: purple;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.drum-machine-togglepad-switch {
+  background-color: red;
+  height: 12.5vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.switch {
+}
+
+.slider {
+  background-color: blue;
+  width: 100px;
+  /* height: 50px; */
+}
+
+.drum-machine-togglepad-display {
+  background-color: orange;
+  height: 7vh;
+  line-height: 7vh;
+  text-align: center;
+  width: 60%;
 }
