@@ -2,15 +2,12 @@ import { faFreeCodeCamp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import './App.css';
-// import SoundQ from './sounds/Heater-1.mp3';
-// import SoundW from './sounds/Heater-2.mp3';
-// import SoundE from './sounds/Heater-3.mp3';
 
 const DrumMachineKeypadButton = ({buttonKey, pressFx, soundlink}) => {
   return (
     <div className="drum-machine-keypad-item">      
-      <button className="drum-machine-keypad-button" onClick={pressFx} id={"key" + buttonKey}>
-        <audio id={buttonKey} src={soundlink}></audio>
+      <button className="drum-pad" onClick={pressFx} id={"key" + buttonKey}>
+        <audio className="clip" id={buttonKey} src={soundlink}></audio>
         <label>{buttonKey}</label>
       </button>
     </div>
@@ -19,59 +16,114 @@ const DrumMachineKeypadButton = ({buttonKey, pressFx, soundlink}) => {
 
 const DrumMachineTogglepadSwitch = ({switchName}) => {
   return (
-    <div className="drum-machine-togglepad-switch" id={switchName}>
-      <label>{switchName}</label>      
-      <div className="slider">
-        <input type="checkbox" className="switch" />
-      </div>
-  </div>
+    <div className="drum-machine-togglepad-switch">
+      <label className="switch-label">{switchName}</label>      
+      <label className="switch">
+        <input type="checkbox" id={switchName} />
+        <span className="slider"></span>
+      </label>
+    </div>
   );  
+}
+
+const DrumMachineDisplay = ({displayValue}) => {
+  return (
+    <div className="drum-machine-togglepad-display" id="display">
+      <label className="">{displayValue}</label>
+    </div>
+  );
+}
+
+const DrumMachineVolume = () => {
+  return (
+    <input type="range" className="drum-machine-togglepad-volume" id="volume-slider"/>
+  );
 }
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      displayValue: 'something'
+      power: true,
+      displayValue: '',
+      volumeLevel: 0.5
     }
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeypadButtonPressed);
+    document.getElementById("volume-slider").addEventListener("input", this.handleVolumeSliderChange)
+    document.getElementById("Power").addEventListener("change", this.powerFx)
+    document.getElementById("Power").checked = true;
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeypadButtonPressed);
+    document.getElementById("volume-slider").removeEventListener("input", this.handleVolumeSliderChange);
   }
 
-  playSoundFx(keyStroke, soundName) {
-    document.getElementById(keyStroke).play();
+  test = () => {
+    console.log("test");
+  }
+
+  playSoundFx = (keyStroke, soundName) => {
+    if (this.state.power) {
+      var audioElement = document.getElementById(keyStroke)
+      audioElement.load();
+      console.log("element volume: " + audioElement.volumeLevel);
+      console.log("state volume: " + this.state.volumeLevel);
+      audioElement.volumeLevel = this.state.volumeLevel;
+      console.log("element volume2: " + audioElement.volumeLevel);
+      
+      console.log(this.state.volumeLevel);
+      audioElement.play();
+      this.setState({
+        displayValue: soundName
+      }, () => { console.log(soundName)});
+    }
     
-    this.setState({
-      displayValue: soundName
-    }, () => { console.log(soundName)});
   }
 
-  handleKeypadButtonPressed(event) {
+  handleKeypadButtonPressed = (event) => {
     let regex = /81|87|69|65|83|68|90|88|67/;
     let isValidKeyPressed = regex.test(event.keyCode);
-    console.log(isValidKeyPressed);
+    if (isValidKeyPressed) {
+      document.getElementById(String.fromCharCode(event.keyCode)).click();
+    } 
   }
 
-  // q 81
-  // w 87
-  // e 69
-  // a 65
-  // s 83
-  // d 68
-  // z 90
-  // x 88 
-  // c 67
+  handleVolumeSliderChange = (event) => {
+    this.setState({
+      displayValue: "Volume: " + event.currentTarget.value,
+      volumeLevel: (event.currentTarget.value / 100)
+    });
+  }
+
+  powerFx = () => {
+    this.setState({
+      power: !this.state.power
+    }, () => { 
+      // set color properties here
+      if (this.state.power) {
+        document.documentElement.style.setProperty('--button-hover-color', '#cdf4dc');
+        document.documentElement.style.setProperty('--button-press-color', '#cdf4dc');
+        document.documentElement.style.setProperty('--button-press-text-color', '#203946');
+        document.documentElement.style.setProperty('--button-text-color', '#cdf4dc');
+        
+      } else {
+        document.documentElement.style.setProperty('--button-hover-color', '#203946');
+        document.documentElement.style.setProperty('--button-press-color', '#203946');
+        document.documentElement.style.setProperty('--button-press-text-color', 'black');
+        document.documentElement.style.setProperty('--button-text-color', 'black');
+      }
+      console.log(this.state.power) 
+    });
+  }
 
   render() {
     return (
       <div className="App">
-        <div className="drum-machine-container">
+        <div className="drum-machine-container" id="drum-machine">
           <div className="drum-machine-container-header">
             FCC <FontAwesomeIcon icon={faFreeCodeCamp} style={{marginLeft: "2px"}} />
           </div>
@@ -89,13 +141,8 @@ class App extends React.Component {
             </div>
             <div className="drum-machine-togglepad">
               <DrumMachineTogglepadSwitch switchName="Power" />
-              <div className="drum-machine-togglepad-display">
-                  <label className="">
-                    {this.state.displayValue}
-                  </label>
-              </div>
-              <div className="drum-machine-togglepad-volume"></div>
-              <div className="drum-machine-togglepad-switch"></div>
+              <DrumMachineDisplay displayValue={this.state.displayValue} />              
+              <DrumMachineVolume />              
             </div>
           </div>          
         </div>      
